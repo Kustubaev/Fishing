@@ -1,0 +1,40 @@
+:host {
+  display: grid;
+  grid-template-rows: 50px 1fr;
+}
+.container {
+  width: 100%;
+  background-color: #c3dde4;
+  position: relative;
+  height: 100%;
+  // overflow: hidden;
+}
+
+.box,
+.box__button {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 50px;
+  height: 100%;
+  aspect-ratio: 1/ 1;
+  padding: 10px;
+  border-radius: 1rem / 1rem;
+  background-color: #9db0d1;
+  font-weight: 600;
+}
+
+.svg {
+  width: 100%;
+  aspect-ratio: 1/1;
+  color: #000000;
+  display: block;
+}
