@@ -55,7 +55,15 @@ export class FishComponent {
       if (!this.isGameOver && this.arrayCoordinates.length) {
         console.log('Работает подписка на изменение игры' + this.index);
         this.isPaused = false;
-        this.reload();
+
+        this.fishHTML.nativeElement.style.transition = '';
+        this.fishHTML.nativeElement.style.left = `${
+          -this.fishParams.width * 2
+        }px`;
+        clearTimeout(this.animationTimer);
+        setTimeout(() => {
+          this.reload();
+        }, 50);
       }
     });
     this.reload();
@@ -64,8 +72,6 @@ export class FishComponent {
 
   private reload() {
     // Очистка
-    this.fishHTML.nativeElement.style.transition = '';
-    this.fishHTML.nativeElement.style.left = `${-250}px`;
     this.resume = 0;
     clearTimeout(this.animationTimer);
 
@@ -124,7 +130,13 @@ export class FishComponent {
             this.resume = i;
           }, delay);
         } else {
-          resolve();
+          this.fishHTML.nativeElement.style.transition = '';
+          this.fishHTML.nativeElement.style.left = `${
+            -this.fishParams.width * 2
+          }px`;
+          setTimeout(() => {
+            resolve();
+          }, 50);
         }
       };
       timeout(index);
@@ -137,6 +149,11 @@ export class FishComponent {
     this.resultSum += this.fishParams.points;
     this.resultSumChange.emit(this.resultSum);
 
-    this.reload();
+    this.fishHTML.nativeElement.style.transition = '';
+    this.fishHTML.nativeElement.style.left = `${-this.fishParams.width * 2}px`;
+    clearTimeout(this.animationTimer);
+    setTimeout(() => {
+      this.reload();
+    }, 50);
   }
 }

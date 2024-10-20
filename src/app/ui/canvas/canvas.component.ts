@@ -3,7 +3,7 @@ import { GameStatusService } from '../../service/game-status.service';
 import { FishComponent } from '../fish/fish.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
-const TIMER: number = 10 - 1; // -1 так как для проверки остается 1 секунда
+const TIMER: number = 30 - 1; // -1 так как для проверки остается 1 секунда
 
 @Component({
   selector: 'app-canvas',

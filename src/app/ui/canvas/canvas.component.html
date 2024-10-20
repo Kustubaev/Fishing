@@ -1,6 +1,6 @@
-<div class="box">
-  <div>Имя: Олег</div>
-  <div>Баллы: {{ resultSum }}</div>
+<div class="header">
+  <div class="name">Имя: Олег</div>
+  <div class="points">Баллы: {{ resultSum }}</div>
   <div class="timer">Таймер: {{ formatTime(countdown + 1) }}</div>
   <div class="box__button">
     <button (click)="pause($event)" class="button">
@@ -15,6 +15,7 @@
     </button>
   </div>
 </div>
+
 <div class="container" #Container>
   @for(item of [0,1,2,3,4,5,6,7,8,9]; track item) {
   <app-fish

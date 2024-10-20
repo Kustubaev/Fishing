@@ -1,40 +1,61 @@
 :host {
   display: grid;
   grid-template-rows: 50px 1fr;
-}
-.container {
-  width: 100%;
-  background-color: #c3dde4;
-  position: relative;
+  background-color: #3ca03fb5;
+  background-image: url(../../../../public/assets/images/background.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 100%;
-  // overflow: hidden;
+  font-family: "PressStart2P", sans-serif;
 }
 
-.box,
-.box__button {
+.container {
+  // background-color: #c3dde4;
+  width: 100%;
+  position: relative;
   height: 100%;
+  overflow: hidden;
+}
+
+.header {
+  width: 90%;
+  margin: 0 auto;
+  padding: 5px 1%;
+  background-color: rgba($color: #15252f, $alpha: 0.8);
+  border-radius: 0 0 2rem 2rem;
+  border: 0.3rem solid rgba(255, 255, 255, 0.9);
+  border-top: none;
+  color: #f7cd10;
+}
+
+.header,
+.box__button {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+.box__button {
+  height: 100%;
 }
 
 .button {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 50px;
+  max-height: 40px;
   height: 100%;
   aspect-ratio: 1/ 1;
-  padding: 10px;
-  border-radius: 1rem / 1rem;
-  background-color: #9db0d1;
+  padding: 8%;
+  border-radius: 0.7rem / 0.7rem;
+  background-color: #f7cd10;
   font-weight: 600;
 }
 
 .svg {
   width: 100%;
   aspect-ratio: 1/1;
-  color: #000000;
+  color: #ffffff;
   display: block;
 }
