@@ -1,14 +1,27 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { GameStatusService } from '../../service/game-status.service';
 import { FishComponent } from '../fish/fish.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { RatingComponent } from "../rating/rating.component";
 
 const TIMER: number = 30 - 1; // -1 так как для проверки остается 1 секунда
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
-  imports: [FishComponent, SvgIconComponent],
+  imports: [FishComponent, SvgIconComponent, ReactiveFormsModule, RatingComponent],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
   host: {
@@ -19,30 +32,26 @@ export class CanvasComponent {
   @ViewChild('Container', { static: true }) container!: ElementRef;
   @ViewChild('Timer', { static: true }) timerHTML!: ElementRef;
   public isPaused: boolean = false;
-  public isGameOver: boolean = false;
+  public isGameOver: boolean = true;
   public width: number = 1380;
   public height: number = 830;
   public countdown = TIMER; // Установка времени игры
-  public resultSum: number = 0;
+  public resultSum: number | null = null;
   private timer: any;
   protected gameStatusService = inject(GameStatusService);
 
   ngOnInit() {
     this.width = this.container.nativeElement.clientWidth;
     this.height = this.container.nativeElement.clientHeight;
-    this.startTimer();
   }
 
   public pause(event: any) {
-    console.log('pause', this.isPaused, this.isGameOver, event);
-    // console.log('pause', this.isPaused, this.isGameOver, event?.pointerType);
-
     this.isPaused = !this.isPaused;
     this.gameStatusService.setPause(this.isPaused);
   }
 
   public reload() {
-    this.resultSum = 0;
+    this.resultSum = null;
     this.countdown = TIMER;
     this.isPaused = false;
     this.isGameOver = false;
@@ -58,12 +67,15 @@ export class CanvasComponent {
           this.countdown--;
           if (this.countdown < 0) {
             clearInterval(this.timer);
+            this.isPopup.set(true);
             this.isGameOver = true;
             this.gameStatusService.setGameOver(this.isGameOver);
           }
         }
       }, 1000);
     } else {
+      clearInterval(this.timer);
+      this.isPopup.set(true);
       this.isGameOver = true;
       this.gameStatusService.setGameOver(this.isGameOver);
     }
@@ -75,5 +87,24 @@ export class CanvasComponent {
       .padStart(2, '0');
     const remainingSeconds: string = (seconds % 60).toString().padStart(2, '0');
     return `${minutes}:${remainingSeconds}`;
+  }
+
+  //form
+  form: FormGroup = new FormGroup({
+    username: new FormControl<string | null>(null, [
+      Validators.required,
+      Validators.maxLength(20),
+    ]),
+  });
+  isValid = signal<boolean>(false);
+  isPopup = signal<boolean>(true); // Отвечает за окно ввода имени и позволяет начать игру
+
+  public onSubmit() {
+    this.form.controls['username'].markAsTouched();
+
+    if (this.form.valid && this.form.value?.username) {
+      this.isPopup.set(false);
+      this.reload();
+    }
   }
 }

@@ -22,7 +22,7 @@ export class FishComponent {
   @Input() index!: number;
   @Input() isPaused!: boolean;
   @Input() isGameOver!: boolean;
-  @Input() resultSum!: number;
+  @Input() resultSum !: number | null;
   @Input() widthParent!: number;
   @Input() heightParent!: number;
   @Output() resultSumChange = new EventEmitter<number>();
@@ -40,7 +40,7 @@ export class FishComponent {
     this.gameStatusService.getPause().subscribe((flag) => {
       this.isPaused = flag;
       if (!this.isPaused && !this.isGameOver && this.arrayCoordinates.length) {
-        console.log('Работает подписка на изменение паузы' + this.index);
+        // console.log('Работает подписка на изменение паузы' + this.index);
         this.runSetTimeout(
           this.arrayCoordinates,
           this.resume,
@@ -52,8 +52,8 @@ export class FishComponent {
     });
     this.gameStatusService.getGameOver().subscribe((flag) => {
       this.isGameOver = flag;
-      if (!this.isGameOver && this.arrayCoordinates.length) {
-        console.log('Работает подписка на изменение игры' + this.index);
+      if (!this.isGameOver) {
+        // console.log('Работает подписка на изменение игры' + this.index);
         this.isPaused = false;
 
         this.reload();
@@ -64,6 +64,7 @@ export class FishComponent {
   }
 
   private reload() {
+    // console.log('Работает в reload() ' + this.index);
     // Очистка
     this.fishHTML.nativeElement.style.transition = '';
     this.fishHTML.nativeElement.style.left = `${-this.fishParams.width * 2}px`;
@@ -74,6 +75,7 @@ export class FishComponent {
       if (this.isGameOver) {
         return;
       }
+      // console.log('Работает в reload() isGameOver пройден' + this.index);
       // Получаем параметры рыбы
       this.fishParams = this.fishService.sizeFish();
 
@@ -138,6 +140,9 @@ export class FishComponent {
   public clickOnFish() {
     if (this.isPaused || this.isGameOver) return;
 
+    if (this.resultSum === null) {
+      this.resultSum = 0;
+    }
     this.resultSum += this.fishParams.points;
     this.resultSumChange.emit(this.resultSum);
 

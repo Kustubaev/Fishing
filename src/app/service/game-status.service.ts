@@ -5,10 +5,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class GameStatusService {
-  public gameOver$ = new BehaviorSubject<boolean>(false);
+  public gameOver$ = new BehaviorSubject<boolean>(true);
   public pause$ = new BehaviorSubject<boolean>(false);
 
   setGameOver(flag: boolean): void {
+    console.log('gameOver', flag);
+
     this.gameOver$.next(flag);
   }
 

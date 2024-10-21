@@ -1,6 +1,6 @@
 <div class="header">
-  <div class="name">Имя: Олег</div>
-  <div class="points">Баллы: {{ resultSum }}</div>
+  <div class="name">Имя: {{ this.form.value?.username }}</div>
+  <div class="points">Баллы: {{ resultSum ? resultSum : 0 }}</div>
   <div class="timer">Таймер: {{ formatTime(countdown + 1) }}</div>
   <div class="box__button">
     <button (click)="pause($event)" class="button">
@@ -28,3 +28,30 @@
   />
   }
 </div>
+
+@if(isPopup()){
+<div class="popup">
+  <div class="popup__inner">
+    <h1 class="popup__title">Рыбалка</h1>
+    @if(resultSum){
+    <h3 class="popup__result">
+      Ваш результат: <span>{{ resultSum }}</span>
+    </h3>
+    }
+    <form class="popup__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <input
+        formControlName="username"
+        class="popup__input"
+        type="text"
+        placeholder="Введите имя"
+        maxlength="15"
+      />
+      @if(form.controls["username"].invalid &&
+      form.controls["username"].touched){
+      <label for="" class="popup__label"> Укажите имя !</label> }
+      <button class="popup__button" type="submit">Начать игру</button>
+    </form>
+    <app-rating/>
+  </div>
+</div>
+}

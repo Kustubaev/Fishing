@@ -1,0 +1,12 @@
+<div class="rating">
+  <h2 class="rating__title">Лучшие результаты</h2>
+  <table class="rating__table">
+    @for(obj of arrayRating; track $index;) {
+    <tr class="rating__tr">
+      <td class="rating__td rating__number">{{ $index + 1 }}.</td>
+      <td class="rating__td rating__name">{{ obj.name }}</td>
+      <td class="rating__td rating__points">{{ obj.value }}</td>
+    </tr>
+    }
+  </table>
+</div>
