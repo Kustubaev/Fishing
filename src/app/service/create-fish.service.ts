@@ -27,7 +27,7 @@ const SizeFish: Fish[] = [
     width: 100,
     height: 50,
     points: 30,
-    time: 2000,
+    time: 2500,
     color: '#c68484',
   },
 ];
@@ -74,6 +74,7 @@ export class CreateFishService {
 
       arrayCoordinates.push({ x, y });
     }
+    if(Math.random() > 0.5) arrayCoordinates.reverse();
     return arrayCoordinates;
   }
 

@@ -22,7 +22,7 @@ export class FishComponent {
   @Input() index!: number;
   @Input() isPaused!: boolean;
   @Input() isGameOver!: boolean;
-  @Input() resultSum !: number | null;
+  @Input() resultSum!: number | null;
   @Input() widthParent!: number;
   @Input() heightParent!: number;
   @Output() resultSumChange = new EventEmitter<number>();
@@ -34,6 +34,7 @@ export class FishComponent {
   private resume: number = 0;
   private animationTimer: any;
   private timeInterval: number = 0;
+  private reloadTimeout: any;
   private fishParams: Fish = {} as Fish;
 
   ngAfterViewInit() {
@@ -64,28 +65,28 @@ export class FishComponent {
   }
 
   private reload() {
-    // console.log('Работает в reload() ' + this.index);
+    // Получаем параметры рыбы
+    this.fishParams = this.fishService.sizeFish();
+    // Генерируем координаты
+    this.arrayCoordinates = this.fishService.bezier(
+      -this.fishParams.width,
+      this.widthParent,
+      -this.fishParams.height,
+      this.heightParent
+    );
+
     // Очистка
     this.fishHTML.nativeElement.style.transition = '';
-    this.fishHTML.nativeElement.style.left = `${-this.fishParams.width * 2}px`;
+    this.fishHTML.nativeElement.style.left = `${this.arrayCoordinates?.[0].x}px`;
     this.resume = 0;
     clearTimeout(this.animationTimer);
+    clearTimeout(this.reloadTimeout);
+    console.log('Это до тайм аута');
 
-    setTimeout(() => {
+    this.reloadTimeout = setTimeout(() => {
       if (this.isGameOver) {
         return;
       }
-      // console.log('Работает в reload() isGameOver пройден' + this.index);
-      // Получаем параметры рыбы
-      this.fishParams = this.fishService.sizeFish();
-
-      // Генерируем координаты
-      this.arrayCoordinates = this.fishService.bezier(
-        -this.fishParams.width,
-        this.widthParent,
-        -this.fishParams.height,
-        this.heightParent
-      );
 
       // Ставим интервал рендеринга
       this.timeInterval =
@@ -94,6 +95,11 @@ export class FishComponent {
         this.arrayCoordinates.length;
 
       // Стилизуем
+      this.fishHTML.nativeElement.style.transform =
+        this.arrayCoordinates[0].x >
+        this.arrayCoordinates[this.arrayCoordinates.length - 1].x
+          ? 'scaleX(-1)'
+          : 'scaleX(1)';
       this.fishHTML.nativeElement.style.width = `${this.fishParams.width}px`;
       this.fishHTML.nativeElement.style.height = `${this.fishParams.height}px`;
       this.fishHTML.nativeElement.style.color = this.fishParams.color;
@@ -107,7 +113,7 @@ export class FishComponent {
           this.reload();
         }
       );
-    }, 17);
+    }, 50);
   }
 
   private async runSetTimeout(
