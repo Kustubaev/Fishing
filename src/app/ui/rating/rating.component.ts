@@ -29,7 +29,9 @@ export class RatingComponent {
         return { player: el, position: index + 1 };
       });
 
-      if (this.resultPlayer) {
+      console.log(this.arrayRating[this.arrayRating.length - 1]);
+
+      if (this.resultPlayer && this.resultPlayer?.position > 10) {
         this.arrayRating.pop();
         this.arrayRating.push(this.resultPlayer);
         this.arrayRating.sort((a, b) => a.position - b.position);
