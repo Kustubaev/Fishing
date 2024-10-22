@@ -1,26 +1,5 @@
-import { Component } from '@angular/core';
-
-interface Rating {
-  name: string;
-  value: number;
-}
-
-const dataRating: Rating[] = [
-  { name: 'Oleg', value: 510 },
-  { name: 'Anna', value: 700 },
-  { name: 'Dmitry', value: 300 },
-  { name: 'Elena', value: 900 },
-  { name: 'Ivan', value: 450 },
-  { name: 'Marina', value: 600 },
-  { name: 'Sergey', value: 350 },
-  { name: 'Natalia', value: 800 },
-  { name: 'Pavel', value: 420 },
-  { name: 'Igor', value: 430 },
-  { name: 'Viktor', value: 500 },
-  { name: 'Daria', value: 400 },
-  { name: 'Alexey', value: 550 },
-  { name: 'Anna', value: 710 },
-];
+import { Component, inject } from '@angular/core';
+import { HttpService, ResultPlayer } from '../../service/http.service';
 
 @Component({
   selector: 'app-rating',
@@ -30,13 +9,31 @@ const dataRating: Rating[] = [
   styleUrl: './rating.component.scss',
 })
 export class RatingComponent {
-  public arrayRating: Rating[] = [];
+  public arrayRating: ResultPlayer[] = [];
+  public resultPlayer: ResultPlayer | null = null;
+
+  http = inject(HttpService);
 
   constructor() {
-    this.arrayRating = [...dataRating]
-      .sort((a, b) => {
-        return b.value - a.value;
-      })
-      .slice(0, 10);
+    this.reload();
+
+    this.http.getCurrentResult().subscribe((val) => {
+      this.resultPlayer = val;
+      this.reload();
+    });
+  }
+
+  reload() {
+    this.http.getRating().subscribe((val: any[]) => {
+      this.arrayRating = val.slice(0, 10).map((el, index) => {
+        return { player: el, position: index + 1 };
+      });
+
+      if (this.resultPlayer) {
+        this.arrayRating.pop();
+        this.arrayRating.push(this.resultPlayer);
+        this.arrayRating.sort((a, b) => a.position - b.position);
+      }
+    });
   }
 }

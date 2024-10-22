@@ -44,7 +44,8 @@
         class="popup__input"
         type="text"
         placeholder="Введите имя"
-        maxlength="15"
+        minlength="3"
+        maxlength="20"
       />
       @if(form.controls["username"].invalid &&
       form.controls["username"].touched){

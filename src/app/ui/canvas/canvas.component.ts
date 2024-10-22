@@ -12,11 +12,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { GameStatusService } from '../../service/game-status.service';
+import { HttpService } from '../../service/http.service';
 import { FishComponent } from '../fish/fish.component';
 import { RatingComponent } from '../rating/rating.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
-const TIMER: number = 10 - 1; // -1 так как для проверки остается 1 секунда
+const TIMER: number = 30 - 1; // -1 так как для проверки остается 1 секунда
 
 @Component({
   selector: 'app-canvas',
@@ -85,6 +86,12 @@ export class CanvasComponent {
             this.isPopup.set(true);
             this.isGameOver = true;
             this.gameStatusService.setGameOver(this.isGameOver);
+            if (this.form.value?.username && this.resultSum) {
+              this.http.uploadResult({
+                name: this.form.value?.username,
+                value: this.resultSum,
+              });
+            }
           }
         }
       }, 1000);
@@ -122,4 +129,6 @@ export class CanvasComponent {
       this.reload();
     }
   }
+
+  http = inject(HttpService);
 }

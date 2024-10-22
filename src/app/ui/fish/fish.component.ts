@@ -81,7 +81,6 @@ export class FishComponent {
     this.resume = 0;
     clearTimeout(this.animationTimer);
     clearTimeout(this.reloadTimeout);
-    console.log('Это до тайм аута');
 
     this.reloadTimeout = setTimeout(() => {
       if (this.isGameOver) {
