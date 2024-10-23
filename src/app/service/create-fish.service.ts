@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 export interface Fish {
   width: number;
-  height: number;
   points: number;
   time: number;
   color: string;
@@ -10,22 +9,19 @@ export interface Fish {
 
 const SizeFish: Fish[] = [
   {
-    width: 200,
-    height: 100,
+    width: 10,
     points: 10,
     time: 5000,
     color: '#84c692',
   },
   {
-    width: 150,
-    height: 75,
+    width: 7,
     points: 20,
     time: 3500,
     color: '#8490c6',
   },
   {
-    width: 100,
-    height: 50,
+    width: 5,
     points: 30,
     time: 2500,
     color: '#c68484',
@@ -49,8 +45,8 @@ export class CreateFishService {
     }
   }
 
-  public bezier(startX: number, endX: number, startY: number, endY: number) {
-    const aP = this.randomPositionsBezier(startX, endX, startY, endY);
+  public bezier(width: number) {
+    const aP = this.randomPositionsBezier(width);
     const step = 0.02;
     let x, y;
     let arrayCoordinates = [];
@@ -74,29 +70,26 @@ export class CreateFishService {
 
       arrayCoordinates.push({ x, y });
     }
-    if(Math.random() > 0.5) arrayCoordinates.reverse();
+    if (Math.random() > 0.5) arrayCoordinates.reverse();
     return arrayCoordinates;
   }
 
   private randomPositionsBezier(
-    startX: number,
-    endX: number,
-    startY: number,
-    endY: number
+    width: number,
   ) {
-    const deltaX = endX - startX;
-    const deltaY = endY + startY;
+    const allX = 100 + width*2;
+    const allY = 100 - width;
     return [
-      { x: startX, y: Math.floor(Math.random() * deltaY + 1) },
+      { x: -width, y: Math.floor(Math.random() * allY + 1) },
       {
-        x: Math.floor(Math.random() * deltaX * 0.36) + deltaX * 0.1,
-        y: Math.floor(Math.random() * deltaY + 1),
+        x: Math.floor(Math.random() * allX * 0.36) + allX * 0.1,
+        y: Math.floor(Math.random() * allY + 1),
       },
       {
-        x: Math.floor(Math.random() * deltaX * 0.36) + deltaX * 0.55,
-        y: Math.floor(Math.random() * deltaY + 1),
+        x: Math.floor(Math.random() * allX * 0.36) + allX * 0.55,
+        y: Math.floor(Math.random() * allY + 1),
       },
-      { x: endX, y: Math.floor(Math.random() * deltaY + 1) },
+      { x: 100+width, y: Math.floor(Math.random() * allY + 1) },
     ];
   }
 }

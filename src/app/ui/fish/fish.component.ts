@@ -41,7 +41,6 @@ export class FishComponent {
     this.gameStatusService.getPause().subscribe((flag) => {
       this.isPaused = flag;
       if (!this.isPaused && !this.isGameOver && this.arrayCoordinates.length) {
-        // console.log('Работает подписка на изменение паузы' + this.index);
         this.runSetTimeout(
           this.arrayCoordinates,
           this.resume,
@@ -54,30 +53,23 @@ export class FishComponent {
     this.gameStatusService.getGameOver().subscribe((flag) => {
       this.isGameOver = flag;
       if (!this.isGameOver) {
-        // console.log('Работает подписка на изменение игры' + this.index);
         this.isPaused = false;
 
         this.reload();
       }
     });
     this.reload();
-    console.log('Работает в ngAfterViewInit после reload() ' + this.index);
   }
 
   private reload() {
     // Получаем параметры рыбы
     this.fishParams = this.fishService.sizeFish();
     // Генерируем координаты
-    this.arrayCoordinates = this.fishService.bezier(
-      -this.fishParams.width,
-      this.widthParent,
-      -this.fishParams.height,
-      this.heightParent
-    );
+    this.arrayCoordinates = this.fishService.bezier(this.fishParams.width);
 
     // Очистка
     this.fishHTML.nativeElement.style.transition = '';
-    this.fishHTML.nativeElement.style.left = `${this.arrayCoordinates?.[0].x}px`;
+    this.fishHTML.nativeElement.style.left = `${this.arrayCoordinates?.[0].x}%`;
     this.resume = 0;
     clearTimeout(this.animationTimer);
     clearTimeout(this.reloadTimeout);
@@ -99,8 +91,7 @@ export class FishComponent {
         this.arrayCoordinates[this.arrayCoordinates.length - 1].x
           ? 'scaleX(-1)'
           : 'scaleX(1)';
-      this.fishHTML.nativeElement.style.width = `${this.fishParams.width}px`;
-      this.fishHTML.nativeElement.style.height = `${this.fishParams.height}px`;
+      this.fishHTML.nativeElement.style.width = `${this.fishParams.width}%`;
       this.fishHTML.nativeElement.style.color = this.fishParams.color;
       this.fishHTML.nativeElement.style.transition = `all ${
         this.timeInterval * 1.5
@@ -129,8 +120,8 @@ export class FishComponent {
           let { x, y } = coordinates[i];
           clearTimeout(this.animationTimer);
           this.animationTimer = setTimeout(() => {
-            this.fishHTML.nativeElement.style.top = `${y}px`;
-            this.fishHTML.nativeElement.style.left = `${x}px`;
+            this.fishHTML.nativeElement.style.top = `${y}%`;
+            this.fishHTML.nativeElement.style.left = `${x}%`;
             timeout(i + 1);
             this.resume = i;
           }, delay);

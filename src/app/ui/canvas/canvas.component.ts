@@ -12,12 +12,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { GameStatusService } from '../../service/game-status.service';
-import { HttpService } from '../../service/http.service';
+import {
+  BestResultWithPlayer,
+  HttpService,
+  Player,
+} from '../../service/http.service';
 import { FishComponent } from '../fish/fish.component';
 import { RatingComponent } from '../rating/rating.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
-const TIMER: number = 30 - 1; // -1 так как для проверки остается 1 секунда
+const TIMER: number = 10 - 1; // -1 так как для проверки остается 1 секунда
 
 @Component({
   selector: 'app-canvas',
@@ -37,6 +41,7 @@ const TIMER: number = 30 - 1; // -1 так как для проверки ост
 export class CanvasComponent {
   @ViewChild('Container', { static: true }) container!: ElementRef;
   @ViewChild('Timer', { static: true }) timerHTML!: ElementRef;
+  public http = inject(HttpService);
   public isPaused: boolean = false;
   public isGameOver: boolean = true;
   public width: number = 1380;
@@ -46,9 +51,23 @@ export class CanvasComponent {
   private timer: any;
   protected gameStatusService = inject(GameStatusService);
 
+  public bestResultWithPlayer: BestResultWithPlayer | null = null; // для отображения рейтинга
+
   ngOnInit() {
     this.width = this.container.nativeElement.clientWidth;
     this.height = this.container.nativeElement.clientHeight;
+
+    this.http.getRating().subscribe((res: Player[]) => {
+      this.bestResultWithPlayer = {
+        array: res.slice(0, 10).map((el, index) => {
+          return { player: el, position: index + 1 };
+        }),
+        player: null,
+      };
+    });
+    this.http.getBestResultWithPlayer().subscribe((res) => {
+      this.bestResultWithPlayer = res;
+    });
   }
 
   public pause(event: any) {
@@ -113,7 +132,7 @@ export class CanvasComponent {
 
   //form
   form: FormGroup = new FormGroup({
-    username: new FormControl<string | null>(null, [
+    username: new FormControl<string | null>('Удалить', [
       Validators.required,
       Validators.maxLength(20),
     ]),
@@ -129,6 +148,4 @@ export class CanvasComponent {
       this.reload();
     }
   }
-
-  http = inject(HttpService);
 }

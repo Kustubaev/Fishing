@@ -29,3 +29,17 @@
     text-align: right;
   }
 }
+
+@media (max-width: 750px) {
+  .rating {
+    &__title {
+      font-size: 16px;
+    }
+    &__table {
+      font-size: 14px;
+    }
+    &__tr {
+      padding: 1px;
+    }
+  }
+}
