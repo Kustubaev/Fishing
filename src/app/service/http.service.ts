@@ -26,6 +26,21 @@ export interface BestResultWithPlayer {
   player: ResultPlayer | null;
 }
 
+export interface PlayerRes {
+  _id: string;
+  name: string;
+  value: number;
+  position: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface ResultArray {
+  resultsArray: ResultPlayer[] | null;
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,6 +52,11 @@ export class HttpService {
   bestResultWithPlayer$ = new BehaviorSubject<BestResultWithPlayer | null>(
     null
   );
+
+  // Универсальный запрос
+  resultArray(result?: Rating): any {
+    return this.http.post<ResultArray>(`${this.baseApiUrl}resultArray`, result);
+  }
 
   getBestResultWithPlayer(): Observable<BestResultWithPlayer | null> {
     return this.bestResultWithPlayer$.asObservable();

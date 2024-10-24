@@ -16,6 +16,7 @@ import {
   BestResultWithPlayer,
   HttpService,
   Player,
+  ResultArray,
 } from '../../service/http.service';
 import { FishComponent } from '../fish/fish.component';
 import { RatingComponent } from '../rating/rating.component';
@@ -54,6 +55,15 @@ export class CanvasComponent {
   public bestResultWithPlayer: BestResultWithPlayer | null = null; // для отображения рейтинга
 
   ngOnInit() {
+    this.http
+      .resultArray({
+        name: 'Mia',
+        value: 720,
+      })
+      .subscribe((res: ResultArray) => {
+        console.log('this.http.resultArray()', res);
+      });
+
     this.width = this.container.nativeElement.clientWidth;
     this.height = this.container.nativeElement.clientHeight;
 
@@ -89,6 +99,7 @@ export class CanvasComponent {
     this.countdown = TIMER;
     this.isPaused = false;
     this.isGameOver = false;
+    this.bestResultWithPlayer = null;
     this.gameStatusService.setGameOver(this.isGameOver);
     clearInterval(this.timer);
     this.startTimer();
@@ -132,7 +143,7 @@ export class CanvasComponent {
 
   //form
   form: FormGroup = new FormGroup({
-    username: new FormControl<string | null>('Удалить', [
+    username: new FormControl<string | null>(null, [
       Validators.required,
       Validators.maxLength(20),
     ]),
