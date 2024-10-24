@@ -1,15 +1,18 @@
 <div class="rating">
   <h2 class="rating__title">Лучшие результаты</h2>
   <table class="rating__table">
-    @if(bestResultWithPlayer){ @for(obj of bestResultWithPlayer.array; track
-    $index;) {
+    @if(resultArray){ @for(obj of resultArray.array; track $index;) {
     <tr class="rating__tr">
       <td class="rating__td rating__number">{{ obj.position }}.</td>
-      <td class="rating__td rating__name">{{ obj.player.name }}</td>
-      <td class="rating__td rating__points">{{ obj.player.value }}</td>
+      <td class="rating__td rating__name">{{ obj.name }}</td>
+      <td class="rating__td rating__points">{{ obj.value }}</td>
     </tr>
+
     } } @else {
     <div>Идёт загрузка таблицы результатов!</div>
     }
   </table>
+  @if(resultArray && resultArray.message){
+  <div class="rating__message">{{ resultArray.message }}</div>
+  }
 </div>

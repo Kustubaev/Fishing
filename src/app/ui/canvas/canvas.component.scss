@@ -212,12 +212,18 @@
     &__title {
       font-size: 8vw;
     }
+    &__form {
+      margin-bottom: 1rem;
+    }
     &__input {
       font-size: 14px;
     }
     &__label,
     &__button {
       font-size: 12px;
+    }
+    &__button {
+      margin-top: 0.3rem;
     }
   }
 }

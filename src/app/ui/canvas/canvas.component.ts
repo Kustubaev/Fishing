@@ -12,12 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { GameStatusService } from '../../service/game-status.service';
-import {
-  BestResultWithPlayer,
-  HttpService,
-  Player,
-  ResultArray,
-} from '../../service/http.service';
+import { HttpService, ResultArray } from '../../service/http.service';
 import { FishComponent } from '../fish/fish.component';
 import { RatingComponent } from '../rating/rating.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -52,31 +47,14 @@ export class CanvasComponent {
   private timer: any;
   protected gameStatusService = inject(GameStatusService);
 
-  public bestResultWithPlayer: BestResultWithPlayer | null = null; // для отображения рейтинга
+  public resultArray: ResultArray | null = null; // для отображения рейтинга
 
   ngOnInit() {
-    this.http
-      .resultArray({
-        name: 'Mia',
-        value: 720,
-      })
-      .subscribe((res: ResultArray) => {
-        console.log('this.http.resultArray()', res);
-      });
-
     this.width = this.container.nativeElement.clientWidth;
     this.height = this.container.nativeElement.clientHeight;
 
-    this.http.getRating().subscribe((res: Player[]) => {
-      this.bestResultWithPlayer = {
-        array: res.slice(0, 10).map((el, index) => {
-          return { player: el, position: index + 1 };
-        }),
-        player: null,
-      };
-    });
-    this.http.getBestResultWithPlayer().subscribe((res) => {
-      this.bestResultWithPlayer = res;
+    this.http.resultArray().subscribe((res: ResultArray) => {
+      this.resultArray = res;
     });
   }
 
@@ -99,7 +77,7 @@ export class CanvasComponent {
     this.countdown = TIMER;
     this.isPaused = false;
     this.isGameOver = false;
-    this.bestResultWithPlayer = null;
+
     this.gameStatusService.setGameOver(this.isGameOver);
     clearInterval(this.timer);
     this.startTimer();
@@ -116,11 +94,18 @@ export class CanvasComponent {
             this.isPopup.set(true);
             this.isGameOver = true;
             this.gameStatusService.setGameOver(this.isGameOver);
+            this.resultArray = null;
             if (this.form.value?.username && this.resultSum) {
-              this.http.uploadResult({
-                name: this.form.value?.username,
-                value: this.resultSum,
-              });
+              let name = this.form.value?.username;
+              name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+              this.http
+                .resultArray({
+                  name,
+                  value: this.resultSum,
+                })
+                .subscribe((res: ResultArray) => {
+                  this.resultArray = res;
+                });
             }
           }
         }
